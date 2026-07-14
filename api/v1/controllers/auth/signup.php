@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 require_once '../../config/db.php';
 require_once '../../helpers/response.php';
+require_once '../../helpers/database.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -80,6 +81,10 @@ if (mysqli_num_rows($checkSlug) > 0) {
 | Start Transaction
 |--------------------------------------------------------------------------
 */
+initializeDatabase($conn);
+ensureColumnsExist($conn);
+seedDefaults($conn);
+
 
 mysqli_begin_transaction($conn);
 
