@@ -4,6 +4,7 @@ header('Content-Type: application/json');
 
 require_once '../../config/db.php';
 require_once '../../helpers/response.php';
+require_once '../../helpers/sendOtpMail.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -35,7 +36,11 @@ $email = mysqli_real_escape_string($conn, $email);
 $result = mysqli_query(
     $conn,
     "
-    SELECT id, first_name, email
+    SELECT
+        id,
+        first_name,
+        last_name,
+        email
     FROM users
     WHERE gym_id = $gym_id
     AND email = '$email'
@@ -55,47 +60,82 @@ $user = mysqli_fetch_assoc($result);
 
 /*
 |--------------------------------------------------------------------------
-| Generate Reset Token
+| Generate OTP
 |--------------------------------------------------------------------------
 */
 
-$token = bin2hex(random_bytes(32));
+$otp = str_pad(
+    random_int(0, 999999),
+    6,
+    '0',
+    STR_PAD_LEFT
+);
 
 $expires = date(
     'Y-m-d H:i:s',
-    strtotime('+1 hour')
+    strtotime('+10 minutes')
 );
 
-$token = mysqli_real_escape_string($conn, $token);
+$otp = mysqli_real_escape_string($conn, $otp);
+
+/*
+|--------------------------------------------------------------------------
+| Save OTP
+|--------------------------------------------------------------------------
+*/
 
 $update = mysqli_query(
     $conn,
     "
     UPDATE users
     SET
-        reset_token = '$token',
-        reset_token_expires = '$expires'
+        reset_otp = '$otp',
+        reset_otp_expires = '$expires'
     WHERE id = {$user['id']}
     "
 );
 
 if (!$update) {
-    errorResponse('Failed to generate reset token', 500);
+    errorResponse('Failed to generate OTP', 500);
 }
 
 /*
 |--------------------------------------------------------------------------
 | Send Email
 |--------------------------------------------------------------------------
-|
-| Example:
-| https://yourdomain.com/reset-password?token=$token&gym_id=$gym_id
-|
 */
 
-// sendResetEmail($user['email'], $token, $gym_id);
+$name = trim(
+    ($user['first_name'] ?? '') .
+    ' ' .
+    ($user['last_name'] ?? '')
+);
+
+if (empty($name)) {
+    $name = 'User';
+}
+
+$sent = sendOtpMail(
+    $user['email'],
+    $name,
+    $otp,
+    'Rapid Gym'
+);
+
+if (!$sent) {
+    errorResponse(
+        'Failed to send OTP email',
+        500
+    );
+}
+
+/*
+|--------------------------------------------------------------------------
+| Success Response
+|--------------------------------------------------------------------------
+*/
 
 successResponse(
-    'Password reset link has been sent to your email.',
+    'A verification code has been sent to your email.',
     []
 );
