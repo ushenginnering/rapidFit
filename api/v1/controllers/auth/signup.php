@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 require_once '../../config/db.php';
 require_once '../../helpers/response.php';
 require_once '../../helpers/database.php';
+require_once '../../helpers/seed.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -188,7 +189,10 @@ try {
 
     $user_id = mysqli_insert_id($conn);
 
+    seedGymDefaults($conn, $gym_id);
+
     mysqli_commit($conn);
+ 
 
     successResponse(
         'Gym created successfully',
