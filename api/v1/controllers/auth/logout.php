@@ -8,12 +8,23 @@ require_once '../../helpers/auth.php';
 
 $user = getAuthenticatedUser();
 
-mysqli_query(
+$gym_id = (int)$user['gym_id'];
+$user_id = (int)$user['id'];
+
+$result = mysqli_query(
     $conn,
-    "UPDATE users
-     SET api_token = NULL
-     WHERE id = {$user['id']}"
+    "
+    UPDATE users
+    SET api_token = NULL
+    WHERE id = $user_id
+    AND gym_id = $gym_id
+    LIMIT 1
+    "
 );
+
+if (!$result) {
+    errorResponse('Failed to logout', 500);
+}
 
 successResponse(
     'Logout successful',
