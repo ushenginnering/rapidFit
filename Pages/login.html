@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Gym Management System - Portal</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit Console">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="...css/auth.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <!-- Center/Left Aligned Glassmorphic Form Portal -->
+    <main class="auth-container">
+        <div class="glass-panel">
+            
+            <header class="brand-wrapper">
+                <div class="brand-logo-container">
+                    <!-- Replace src with your active logo file -->
+                    <img class="brand-logo-img" src="../assets/logo/logo.png" alt="RapidFit Logo">
+                </div>
+                <span class="brand-subtag">Gym Management System</span>
+            </header>
+
+            <!-- Responsive 3D Book Stage Wrapper -->
+            <div class="book-stage" id="bookStage">
+
+                <!-- State 1: Login -->
+                <section class="auth-state active" id="state-login">
+                    <p class="welcome-msg">Welcome back!</p>
+                    <h1 class="main-heading">Log In To Your Account</h1>
+
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="login-identity">Email or Username</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="login-identity" class="form-input" placeholder="Enter your email or username" required>
+                                <i data-lucide="user"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required>
+                                <i data-lucide="lock"></i>
+                                <button type="button" class="password-toggle" data-target="login-password">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-controls">
+                            <label class="remember-me">
+                                <input type="checkbox" id="rememberMe">
+                                <span class="custom-checkbox"></span>
+                                Remember me
+                            </label>
+                            <a href="#" class="forgot-link" data-target="state-forgot">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Log In</button>
+                    </form>
+
+                    <div class="divider">or continue with</div>
+
+                    <button class="biometric-btn" id="biometricLoginBtn" type="button">
+                        <i data-lucide="fingerprint"></i>
+                        Use Fingerprint
+                    </button>
+
+                    <div class="footer-navigation">
+                        Don't have an account?<span class="nav-trigger" data-target="state-signup">Sign Up</span>
+                    </div>
+                </section>
+
+                <!-- State 2: Sign Up -->
+                <section class="auth-state" id="state-signup">
+                    <p class="welcome-msg">Get Started</p>
+                    <h1 class="main-heading">Create Gym Account</h1>
+                    <p class="sub-heading">Register a new administrative console profile.</p>
+
+                    <form id="signUpForm">
+                        <div class="form-group">
+                            <label for="signup-username">Username</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="signup-username" class="form-input" placeholder="Create username" required>
+                                <i data-lucide="user-plus"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-email">Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="signup-email" class="form-input" placeholder="name@domain.com" required>
+                                <i data-lucide="mail"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="signup-password">Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="signup-password" class="form-input" placeholder="Enter secure password" required>
+                                <i data-lucide="lock"></i>
+                                <button type="button" class="password-toggle" data-target="signup-password">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Register Console Account</button>
+                    </form>
+
+                    <div class="footer-navigation">
+                        Already have an account?<span class="nav-trigger" data-target="state-login">Log In</span>
+                    </div>
+                </section>
+
+                <!-- State 3: Forgot Password -->
+                <section class="auth-state" id="state-forgot">
+                    <p class="welcome-msg">Password Recovery</p>
+                    <h1 class="main-heading">Enter Your Email</h1>
+                    <p class="sub-heading">We'll dispatch a verification OTP code to help reset your password.</p>
+
+                    <form id="forgotForm">
+                        <div class="form-group">
+                            <label for="forgot-email">Recovery Email Address</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="forgot-email" class="form-input" placeholder="yourname@domain.com" required>
+                                <i data-lucide="mail"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send OTP Code</button>
+                    </form>
+
+                    <div class="footer-navigation">
+                        Back to<span class="nav-trigger" data-target="state-login">Log In</span>
+                    </div>
+                </section>
+
+                <!-- State 4: Enter OTP -->
+                <section class="auth-state" id="state-otp">
+                    <p class="welcome-msg">Verification</p>
+                    <h1 class="main-heading">Enter OTP Code</h1>
+                    <p class="sub-heading">Please enter the security verification code dispatched to your email.</p>
+
+                    <form id="otpForm">
+                        <div class="otp-container">
+                            <input type="text" maxlength="1" class="otp-input" required>
+                            <input type="text" maxlength="1" class="otp-input" required>
+                            <input type="text" maxlength="1" class="otp-input" required>
+                            <input type="text" maxlength="1" class="otp-input" required>
+                            <input type="text" maxlength="1" class="otp-input" required>
+                            <input type="text" maxlength="1" class="otp-input" required>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Verify Security OTP</button>
+                    </form>
+
+                    <div class="footer-navigation">
+                        Didn't receive a code? <span id="resendOtpBtn">Resend Code</span>
+                    </div>
+                    <div class="footer-navigation" style="margin-top: 10px;">
+                        Back to<span class="nav-trigger" data-target="state-login">Log In</span>
+                    </div>
+                </section>
+
+                <!-- State 5: Reset Password -->
+                <section class="auth-state" id="state-create-password">
+                    <p class="welcome-msg">Secure Account</p>
+                    <h1 class="main-heading">Create Password</h1>
+                    <p class="sub-heading">Set up your new, highly secure master control password.</p>
+
+                    <form id="resetPasswordForm">
+                        <div class="form-group">
+                            <label for="new-password">New Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="new-password" class="form-input" placeholder="Min. 8 characters" required>
+                                <i data-lucide="lock"></i>
+                                <button type="button" class="password-toggle" data-target="new-password">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="confirm-password" class="form-input" placeholder="Re-enter password" required>
+                                <i data-lucide="lock"></i>
+                                <button type="button" class="password-toggle" data-target="confirm-password">
+                                    <i data-lucide="eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Update Password & Login</button>
+                    </form>
+                </section>
+
+            </div>
+
+            <footer class="footer-credit">
+                &copy; 2026 RapidFit. All rights reserved.
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- System Toast Container -->
+    <div class="toast-container">
+        <div class="toast" id="systemToast">
+            <i data-lucide="info"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="...js/api.js"></script>
+    <script src="...js/auth.js"></script>
+    
+    <!-- PWA Registration Script -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../../sw.js')
+                    .then(reg => console.log('RapidFit Service Worker successfully running: ', reg.scope))
+                    .catch(err => console.error('Service Worker registration failed: ', err));
+            });
+        }
+    </script>
+</body>
+</html>
