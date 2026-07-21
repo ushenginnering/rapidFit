@@ -1,5 +1,22 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| CORS Headers — Allow cross-origin requests from any frontend origin
+|--------------------------------------------------------------------------
+*/
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-Gym-Id');
+header('Access-Control-Max-Age: 86400');
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
 header('Content-Type: application/json');
 
 /*
@@ -36,6 +53,10 @@ switch (true) {
 
     case $method === 'POST' && $route === 'auth/logout':
         require 'controllers/auth/logout.php';
+        break;
+
+    case $method === 'POST' && $route === 'auth/signup':
+        require 'controllers/auth/signup.php';
         break;
 
     case $method === 'POST' && $route === 'auth/forgot-password':

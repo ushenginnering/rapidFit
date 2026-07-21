@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Members Management</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item active">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Directory</span>
+                        <h1 class="page-heading">Members Directory</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="openAddMemberBtn">
+                        <i data-lucide="user-plus"></i>
+                        <span>Add Member</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Search & Filter Controls -->
+            <section class="quick-actions-bar">
+                <div class="content-card" style="padding: 16px 24px;">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        
+                        <!-- Search Bar with Debouncing Hook -->
+                        <div class="input-wrapper" style="flex-grow: 1; max-width: 400px; min-width: 260px;">
+                            <input type="text" id="memberSearchInput" class="form-input" placeholder="Search by name, email, or Member ID..." style="background: rgba(255, 255, 255, 0.03); color: #fff;">
+                            <i data-lucide="search"></i>
+                        </div>
+
+                        <!-- Status Filter Pills -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="statusFilterGroup">
+                            <button class="table-action-btn primary filter-btn active" data-status="all">All</button>
+                            <button class="table-action-btn filter-btn" data-status="active">Active</button>
+                            <button class="table-action-btn filter-btn" data-status="expiring">Expiring Soon</button>
+                            <button class="table-action-btn filter-btn" data-status="expired">Expired</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Members Data Table -->
+            <section class="dashboard-secondary-grid">
+                <div class="content-card full-width-card">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Member ID</th>
+                                    <th>Full Name</th>
+                                    <th>Membership Plan</th>
+                                    <th>Phone / Email</th>
+                                    <th>Expiration</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="membersTableBody">
+                                <!-- Dynamic rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty / Loading State Containers -->
+                    <div id="loadingState" style="text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 32px; height: 32px; margin-bottom: 8px;"></i>
+                        <p>Fetching members directory...</p>
+                    </div>
+
+                    <div id="emptyState" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="users" style="width: 48px; height: 48px; margin-bottom: 12px; color: rgba(255,255,255,0.2);"></i>
+                        <h3>No members found</h3>
+                        <p style="font-size: 0.85rem;">Try adjusting your search criteria or register a new member.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Add / Edit Member Modal Dialog -->
+    <div class="sidebar-overlay" id="modalOverlay">
+        <div class="content-card" id="memberModal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 550px; z-index: 1001; display: none; max-height: 90vh; overflow-y: auto;">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="modalTitle">Register New Member</h2>
+                    <p class="card-subtitle">Enter personal details and membership assignment</p>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--text-white); cursor: pointer;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="memberForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" id="member-id">
+
+                <div class="form-group">
+                    <label for="member-fullname">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="member-fullname" class="form-input" placeholder="e.g. John Doe" required>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="member-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="member-email" class="form-input" placeholder="john@example.com" required>
+                            <i data-lucide="mail"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="member-phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="member-phone" class="form-input" placeholder="+1 234 567 890" required>
+                            <i data-lucide="phone"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="member-plan">Membership Plan</label>
+                        <div class="input-wrapper">
+                            <select id="member-plan" class="form-input" style="appearance: none; background: #141414;" required>
+                                <option value="Monthly Pass">Monthly Pass</option>
+                                <option value="Gold Quarterly">Gold Quarterly</option>
+                                <option value="Platinum Annual">Platinum Annual</option>
+                            </select>
+                            <i data-lucide="badge-percent"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="member-start-date">Start Date</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="member-start-date" class="form-input" required>
+                            <i data-lucide="calendar"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="saveMemberBtn">Save Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item active">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="finance.html" class="bottom-nav-item">
+            <i data-lucide="wallet"></i>
+            <span>Finance</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/members.js"></script>
+</body>
+</html>
