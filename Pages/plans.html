@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Membership Plans</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item active">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Pricing Strategy</span>
+                        <h1 class="page-heading">Membership Packages</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="openAddPlanBtn">
+                        <i data-lucide="plus-circle"></i>
+                        <span>Create New Plan</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Active Plans Grid -->
+            <section style="margin-top: 24px;">
+                <div class="plans-grid" id="plansContainer">
+                    <!-- Dynamic plan cards injected via JS -->
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" style="text-align: center; padding: 60px; color: var(--text-secondary-gray);">
+                    <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 36px; height: 36px; margin-bottom: 12px;"></i>
+                    <p>Loading membership packages...</p>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Transparent Glass Modal for Add/Edit Plan -->
+    <div class="sidebar-overlay" id="modalOverlay">
+        <div class="content-card transparent-glass-modal" id="planModal">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="modalTitle">Create Plan Tier</h2>
+                    <p class="card-subtitle">Set pricing, duration, and feature perks</p>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--text-white); cursor: pointer;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="planForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" id="plan-id">
+
+                <div class="form-group">
+                    <label for="plan-name">Plan Title</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="plan-name" class="form-input" placeholder="e.g. Platinum Annual" required>
+                        <i data-lucide="award"></i>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="plan-price">Price ($)</label>
+                        <div class="input-wrapper">
+                            <input type="number" step="0.01" id="plan-price" class="form-input" placeholder="99.99" required>
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plan-duration">Billing Interval</label>
+                        <div class="input-wrapper">
+                            <select id="plan-duration" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Monthly">Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Bi-Annual">Bi-Annual</option>
+                                <option value="Annual">Annual</option>
+                            </select>
+                            <i data-lucide="calendar"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="plan-features">Features List (Comma Separated)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="plan-features" class="form-input" placeholder="24/7 Access, Free Trainer, Sauna Access" required>
+                        <i data-lucide="list-checks"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="plan-badge">Badge Label (Optional)</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="plan-badge" class="form-input" placeholder="e.g. Most Popular">
+                        <i data-lucide="sparkles"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="savePlanBtn">Save Plan Tier</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="plans.html" class="bottom-nav-item active">
+            <i data-lucide="badge-percent"></i>
+            <span>Plans</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Page Specific Glass & Grid Styling -->
+    <style>
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .plan-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(230, 57, 70, 0.4);
+        }
+
+        .plan-card.featured {
+            border: 1px solid rgba(230, 57, 70, 0.5);
+            box-shadow: 0 0 25px rgba(230, 57, 70, 0.15);
+        }
+
+        .plan-price-tag {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.8rem;
+            letter-spacing: 1px;
+            color: var(--text-white);
+            margin: 12px 0 4px 0;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .plan-price-tag span {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--text-secondary-gray);
+            font-weight: 400;
+        }
+
+        .plan-feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .plan-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-secondary-gray);
+        }
+
+        .plan-feature-item i {
+            color: var(--primary-rapid-red);
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Transparent Glass Modal Custom Styling */
+        .transparent-glass-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            z-index: 1001;
+            display: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/plans.js"></script>
+</body>
+</html>

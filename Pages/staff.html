@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Staff & Access Control</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img`/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item active">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Team Roster & Access Control</span>
+                        <h1 class="page-heading">Staff Management</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="openStaffModalBtn">
+                        <i data-lucide="user-plus"></i>
+                        <span>Add Staff Member</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Staff Summary KPI Metric Grid -->
+            <section class="dashboard-kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total Personnel</span>
+                        <i data-lucide="users" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statTotalStaff">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="check"></i> Active workforce</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Currently On Duty</span>
+                        <i data-lucide="clock" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statOnDuty">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="zap"></i> Active shift</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Personal Trainers</span>
+                        <i data-lucide="dumb-bell" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statTrainers">0</div>
+                    <span class="kpi-trend neutral"><i data-lucide="activity"></i> Fitness coaches</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Admins & Managers</span>
+                        <i data-lucide="shield-check" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statAdmins">0</div>
+                    <span class="kpi-trend neutral"><i data-lucide="lock"></i> Full system access</span>
+                </div>
+            </section>
+
+            <!-- Quick Search & Role Filter Bar -->
+            <section class="quick-actions-bar" style="margin-top: 24px;">
+                <div class="content-card" style="padding: 16px 24px;">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        
+                        <!-- Search Input -->
+                        <div class="input-wrapper" style="flex-grow: 1; max-width: 400px; min-width: 260px;">
+                            <input type="text" id="staffSearchInput" class="form-input" placeholder="Search staff by name, staff ID, or role..." style="background: rgba(255, 255, 255, 0.03);">
+                            <i data-lucide="search"></i>
+                        </div>
+
+                        <!-- Role Filter Buttons -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="roleFilterGroup">
+                            <button class="table-action-btn primary filter-btn active" data-role="all">All Roles</button>
+                            <button class="table-action-btn filter-btn" data-role="trainer">Trainers</button>
+                            <button class="table-action-btn filter-btn" data-role="receptionist">Front Desk</button>
+                            <button class="table-action-btn filter-btn" data-role="admin">Admin</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Staff Directory Table -->
+            <section class="dashboard-secondary-grid">
+                <div class="content-card full-width-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Employee Roster</h2>
+                            <p class="card-subtitle">Manage facility staff accounts, permissions, and shift schedules</p>
+                        </div>
+                        <button class="table-action-btn" id="exportStaffCsvBtn">
+                            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                            <span>Export Roster</span>
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Staff Member</th>
+                                    <th>Role / Specialization</th>
+                                    <th>Access Level</th>
+                                    <th>Shift / Schedule</th>
+                                    <th>Duty Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="staffTableBody">
+                                <!-- Dynamic dynamic content injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Loading & Empty States -->
+                    <div id="loadingState" style="text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 32px; height: 32px; margin-bottom: 8px;"></i>
+                        <p>Loading staff directory...</p>
+                    </div>
+
+                    <div id="emptyState" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="user-x" style="width: 48px; height: 48px; margin-bottom: 12px; color: rgba(255,255,255,0.2);"></i>
+                        <h3>No staff members found</h3>
+                        <p style="font-size: 0.85rem;">Try adjusting your search query or role filter.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Transparent Glass Modal for Adding / Editing Staff -->
+    <div class="sidebar-overlay" id="staffModalOverlay">
+        <div class="content-card transparent-glass-modal" id="staffModal">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="modalTitle">Add Staff Member</h2>
+                    <p class="card-subtitle">Grant system permissions and assign duties</p>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--text-white); cursor: pointer;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="staffForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" id="staff-id">
+
+                <div class="form-group">
+                    <label for="staff-name">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="staff-name" class="form-input" placeholder="e.g. Marcus Vance" required>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="staff-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="staff-email" class="form-input" placeholder="marcus@rapidfit.com" required>
+                            <i data-lucide="mail"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="staff-phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="staff-phone" class="form-input" placeholder="+1 (555) 019-2834" required>
+                            <i data-lucide="phone"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="staff-role">Staff Role</label>
+                        <div class="input-wrapper">
+                            <select id="staff-role" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Personal Trainer">Personal Trainer</option>
+                                <option value="Front Desk Manager">Front Desk Manager</option>
+                                <option value="General Administrator">General Administrator</option>
+                                <option value="Nutrition Specialist">Nutrition Specialist</option>
+                            </select>
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="staff-access">System Access Level</label>
+                        <div class="input-wrapper">
+                            <select id="staff-access" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Full Administrator">Full Administrator</option>
+                                <option value="Front Desk / Check-In">Front Desk / Check-In</option>
+                                <option value="Trainer View Only">Trainer View Only</option>
+                            </select>
+                            <i data-lucide="shield-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="staff-shift">Shift Schedule</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="staff-shift" class="form-input" placeholder="Morning (06:00 - 14:00)" required>
+                            <i data-lucide="clock"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="staff-duty">Duty Status</label>
+                        <div class="input-wrapper">
+                            <select id="staff-duty" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="onduty">On Duty</option>
+                                <option value="offduty">Off Duty</option>
+                                <option value="leave">On Leave</option>
+                            </select>
+                            <i data-lucide="activity"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="saveStaffBtn">Save Staff Member</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="staff.html" class="bottom-nav-item active">
+            <i data-lucide="user-cog"></i>
+            <span>Staff</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Specialized Glass Modal Styling -->
+    <style>
+        .transparent-glass-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 520px;
+            z-index: 1001;
+            display: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/staff.js"></script>
+</body>
+</html>

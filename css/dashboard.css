@@ -594,3 +594,113 @@ body {
         display: flex;
     }
 }
+/* ==========================================================================
+   SHARED GLASSFORM COMPONENTS
+   ========================================================================== */
+
+/* Form Field Layout */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary-gray);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Input & Icon Wrapper */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Glassmorphic Input Style */
+.form-input {
+    width: 100%;
+    
+    /* -------------------------------------------------------------
+       INPUT PADDING & HEIGHT CONTROL
+       Format: padding: TOP right BOTTOM left;
+       Increase top & bottom values (e.g., 16px or 18px) for taller inputs!
+       ------------------------------------------------------------- */
+    padding: 14px 42px 14px 16px; 
+    
+    background: var(--glass-card-bg) !important;
+    border: 1px solid var(--border-transparent-white) !important;
+    border-radius: 12px;
+    color: var(--text-white) !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    transition: all 0.25s ease;
+}
+
+/* Input Placeholder Color */
+.form-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+/* Input Focus Glow */
+.form-input:focus {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--primary-rapid-red) !important;
+    box-shadow: 0 0 12px rgba(230, 57, 70, 0.3);
+}
+
+/* Lucide Icon Alignment inside Input */
+.input-wrapper i,
+.input-wrapper svg {
+    position: absolute;
+    right: 14px;
+    width: 18px;
+    height: 18px;
+    color: var(--text-secondary-gray);
+    pointer-events: none;
+    transition: color 0.25s ease;
+}
+
+/* Highlight Icon on Input Focus */
+.input-wrapper:focus-within i,
+.input-wrapper:focus-within svg {
+    color: var(--primary-rapid-red);
+}
+
+/* Form Submit / Primary Action Button */
+.submit-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--primary-gradient-start), var(--primary-gradient-end));
+    color: var(--text-white);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+}
+
+.submit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(230, 57, 70, 0.5);
+}
+
+/* Prevent Chrome/Edge Autofill from Forcing White Backgrounds */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--text-white) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #080808 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}

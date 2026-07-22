@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Settings & Configuration</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item active">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">System & Facility Config</span>
+                        <h1 class="page-heading">Settings</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Settings Navigation Tabs Bar -->
+            <section style="margin-top: 24px;">
+                <div class="content-card" style="padding: 12px 20px;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="settingsTabGroup">
+                        <button class="table-action-btn primary tab-btn active" data-tab="facility">
+                            <i data-lucide="building" style="width: 14px; height: 14px;"></i>
+                            <span>Facility Profile</span>
+                        </button>
+                        <button class="table-action-btn tab-btn" data-tab="pwa">
+                            <i data-lucide="smartphone" style="width: 14px; height: 14px;"></i>
+                            <span>PWA & App Preferences</span>
+                        </button>
+                        <button class="table-action-btn tab-btn" data-tab="security">
+                            <i data-lucide="shield-check" style="width: 14px; height: 14px;"></i>
+                            <span>Security & Access</span>
+                        </button>
+                        <button class="table-action-btn tab-btn" data-tab="billing">
+                            <i data-lucide="credit-card" style="width: 14px; height: 14px;"></i>
+                            <span>Console Billing</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 1: Facility Profile -->
+            <section class="tab-content" id="tab-facility" style="margin-top: 24px;">
+                <div class="content-card full-width-card" style="max-width: 800px;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Gym Facility Details</h2>
+                            <p class="card-subtitle">General information visible on member receipts and check-in kiosks</p>
+                        </div>
+                    </div>
+
+                    <form id="facilitySettingsForm" style="display: flex; flex-direction: column; gap: 20px; margin-top: 12px;">
+                        <div class="form-group">
+                            <label for="gym-name">Facility Name</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="gym-name" class="form-input" value="RapidFit Gym & Fitness Hub 1" required>
+                                <i data-lucide="building"></i>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label for="gym-email">Support Email</label>
+                                <div class="input-wrapper">
+                                    <input type="email" id="gym-email" class="form-input" value="contact@rapidfit.com" required>
+                                    <i data-lucide="mail"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gym-phone">Facility Hotline</label>
+                                <div class="input-wrapper">
+                                    <input type="tel" id="gym-phone" class="form-input" value="+1 (555) 890-1122" required>
+                                    <i data-lucide="phone"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="gym-address">Physical Address</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="gym-address" class="form-input" value="104 Innovation Boulevard, Tech District, Suite 4B" required>
+                                <i data-lucide="map-pin"></i>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label for="gym-hours">Operating Hours</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="gym-hours" class="form-input" value="Mon-Sat: 05:00 - 23:00 | Sun: 07:00 - 20:00" required>
+                                    <i data-lucide="clock"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gym-capacity">Max Capacity Alert Limit</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="gym-capacity" class="form-input" value="250" required>
+                                    <i data-lucide="users"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                            <button type="submit" class="submit-btn" id="saveFacilityBtn" style="max-width: 220px;">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 2: PWA & App Preferences -->
+            <section class="tab-content" id="tab-pwa" style="margin-top: 24px; display: none;">
+                <div class="content-card full-width-card" style="max-width: 800px;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Progressive Web App Preferences</h2>
+                            <p class="card-subtitle">Configure offline caching, synchronization, and local hardware integration</p>
+                        </div>
+                    </div>
+
+                    <form id="pwaSettingsForm" style="display: flex; flex-direction: column; gap: 20px; margin-top: 12px;">
+                        
+                        <div class="setting-toggle-row">
+                            <div>
+                                <h4 style="color: var(--text-white); margin-bottom: 4px;">Offline Data Caching</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-secondary-gray);">Store member rosters locally for uninterrupted check-in during internet outages.</p>
+                            </div>
+                            <label class="switch-toggle">
+                                <input type="checkbox" id="toggle-offline" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+
+                        <div class="setting-toggle-row">
+                            <div>
+                                <h4 style="color: var(--text-white); margin-bottom: 4px;">Camera QR Auto-Scanner</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-secondary-gray);">Automatically engage device camera upon opening Check-In module.</p>
+                            </div>
+                            <label class="switch-toggle">
+                                <input type="checkbox" id="toggle-camera" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+
+                        <div class="setting-toggle-row">
+                            <div>
+                                <h4 style="color: var(--text-white); margin-bottom: 4px;">Instant Push Notifications</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-secondary-gray);">Receive alerts for unauthorized check-ins and overdue memberships.</p>
+                            </div>
+                            <label class="switch-toggle">
+                                <input type="checkbox" id="toggle-notifications" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <hr style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+
+                        <div class="setting-toggle-row">
+                            <div>
+                                <h4 style="color: var(--text-white); margin-bottom: 4px;">Clear Local Data Cache</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-secondary-gray);">Purge locally cached offline data and resync from server.</p>
+                            </div>
+                            <button type="button" class="table-action-btn" id="clearCacheBtn" style="color: var(--primary-rapid-red); border-color: rgba(229, 9, 20, 0.3);">
+                                <i data-lucide="trash-2" style="width: 14px; height: 14px;"></i>
+                                <span>Clear Cache</span>
+                            </button>
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                            <button type="submit" class="submit-btn" id="savePwaBtn" style="max-width: 220px;">Save Preferences</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 3: Security & Access -->
+            <section class="tab-content" id="tab-security" style="margin-top: 24px; display: none;">
+                <div class="content-card full-width-card" style="max-width: 800px;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Security & Credentials</h2>
+                            <p class="card-subtitle">Update root account credentials and session policies</p>
+                        </div>
+                    </div>
+
+                    <form id="securitySettingsForm" style="display: flex; flex-direction: column; gap: 20px; margin-top: 12px;">
+                        <div class="form-group">
+                            <label for="curr-password">Current Password</label>
+                            <div class="input-wrapper">
+                                <input type="password" id="curr-password" class="form-input" placeholder="••••••••••••" required>
+                                <i data-lucide="lock"></i>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label for="new-password">New Password</label>
+                                <div class="input-wrapper">
+                                    <input type="password" id="new-password" class="form-input" placeholder="••••••••••••" required>
+                                    <i data-lucide="key-round"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="confirm-password">Confirm Password</label>
+                                <div class="input-wrapper">
+                                    <input type="password" id="confirm-password" class="form-input" placeholder="••••••••••••" required>
+                                    <i data-lucide="check-check"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-toggle-row" style="margin-top: 8px;">
+                            <div>
+                                <h4 style="color: var(--text-white); margin-bottom: 4px;">Two-Factor Authentication (2FA)</h4>
+                                <p style="font-size: 0.8rem; color: var(--text-secondary-gray);">Require an authenticator code when logging into the admin console.</p>
+                            </div>
+                            <label class="switch-toggle">
+                                <input type="checkbox" id="toggle-2fa">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="margin-top: 10px;">
+                            <button type="submit" class="submit-btn" id="saveSecurityBtn" style="max-width: 220px;">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- TAB 4: Console Billing -->
+            <section class="tab-content" id="tab-billing" style="margin-top: 24px; display: none;">
+                <div class="content-card full-width-card" style="max-width: 800px;">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Console Subscription Plan</h2>
+                            <p class="card-subtitle">Manage your RapidFit SaaS license and facility seats</p>
+                        </div>
+                        <span class="badge badge-success">Active License</span>
+                    </div>
+
+                    <div style="padding: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary-rapid-red); font-weight: 700; letter-spacing: 1px;">Current Plan</span>
+                                <h3 style="font-size: 1.4rem; color: var(--text-white); margin-top: 2px;">Enterprise Gym Edition</h3>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary-gray); margin-top: 4px;">Unlimited active members • 10 staff seats • Offline PWA sync</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.6rem; font-weight: 700; color: var(--text-white);">$199<span style="font-size: 0.9rem; color: var(--text-secondary-gray);">/mo</span></div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary-gray);">Renews on Aug 15, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="table-action-btn primary" id="upgradePlanBtn">
+                            <i data-lucide="zap" style="width: 14px; height: 14px;"></i>
+                            <span>Upgrade Tier</span>
+                        </button>
+                        <button class="table-action-btn" id="downloadInvoicesBtn">
+                            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                            <span>Billing History</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="staff.html" class="bottom-nav-item">
+            <i data-lucide="user-cog"></i>
+            <span>Staff</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item active">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Custom Switch Toggle & Glass Form Styles -->
+    <style>
+        .setting-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            transition: .3s;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: #ffffff;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-rapid-red);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+    </style>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" style="position: fixed; bottom: 80px; right: 24px; z-index: 2000; display: flex; flex-direction: column; gap: 8px;"></div>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/settings.js"></script>
+</body>
+</html>

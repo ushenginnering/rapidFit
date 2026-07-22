@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Finance & Revenue</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item active">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Accounting & Transactions</span>
+                        <h1 class="page-heading">Finance Terminal</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="openPaymentModalBtn">
+                        <i data-lucide="credit-card"></i>
+                        <span>Record Payment</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Revenue KPI Metric Grid -->
+            <section class="dashboard-kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Gross Revenue (MTD)</span>
+                        <i data-lucide="dollar-sign" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statGrossRevenue">$0.00</div>
+                    <span class="kpi-trend positive"><i data-lucide="trending-up"></i> +14.2% from last month</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Payments Today</span>
+                        <i data-lucide="check-circle-2" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statTodayRevenue">$0.00</div>
+                    <span class="kpi-trend neutral"><i data-lucide="activity"></i> Updated live</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Pending Invoices</span>
+                        <i data-lucide="clock" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statPendingRevenue">$0.00</div>
+                    <span class="kpi-trend negative"><i data-lucide="alert-circle"></i> Requires follow-up</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Active Subscriptions</span>
+                        <i data-lucide="refresh-cw" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statActiveSubs">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="users"></i> Recurring accounts</span>
+                </div>
+            </section>
+
+            <!-- Search & Filter Bar -->
+            <section class="quick-actions-bar" style="margin-top: 24px;">
+                <div class="content-card" style="padding: 16px 24px;">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        
+                        <!-- Search Bar -->
+                        <div class="input-wrapper" style="flex-grow: 1; max-width: 400px; min-width: 260px;">
+                            <input type="text" id="transactionSearchInput" class="form-input" placeholder="Search by Invoice ID, member name, or receipt code..." style="background: rgba(255, 255, 255, 0.03);">
+                            <i data-lucide="search"></i>
+                        </div>
+
+                        <!-- Status Filter Buttons -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="statusFilterGroup">
+                            <button class="table-action-btn primary filter-btn active" data-status="all">All Logs</button>
+                            <button class="table-action-btn filter-btn" data-status="paid">Paid</button>
+                            <button class="table-action-btn filter-btn" data-status="pending">Pending</button>
+                            <button class="table-action-btn filter-btn" data-status="refunded">Refunded</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transactions Ledger Table -->
+            <section class="dashboard-secondary-grid">
+                <div class="content-card full-width-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Transaction History</h2>
+                            <p class="card-subtitle">Detailed payment receipts and invoices</p>
+                        </div>
+                        <button class="table-action-btn" id="exportCsvBtn">
+                            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                            <span>Export CSV</span>
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Invoice Ref</th>
+                                    <th>Member Details</th>
+                                    <th>Description / Plan</th>
+                                    <th>Amount</th>
+                                    <th>Payment Method</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="financeTableBody">
+                                <!-- Dynamic rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Loading & Empty States -->
+                    <div id="loadingState" style="text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 32px; height: 32px; margin-bottom: 8px;"></i>
+                        <p>Loading financial transactions...</p>
+                    </div>
+
+                    <div id="emptyState" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="receipt" style="width: 48px; height: 48px; margin-bottom: 12px; color: rgba(255,255,255,0.2);"></i>
+                        <h3>No transaction records found</h3>
+                        <p style="font-size: 0.85rem;">Try adjusting your search criteria or process a new payment.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Transparent Glass Modal for Processing Payment / Renewal -->
+    <div class="sidebar-overlay" id="modalOverlay">
+        <div class="content-card transparent-glass-modal" id="paymentModal">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="modalTitle">Record New Payment</h2>
+                    <p class="card-subtitle">Issue invoice receipt or manual renewal</p>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--text-white); cursor: pointer;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="paymentForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group">
+                    <label for="payment-member-code">Member ID / Pass Code</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="payment-member-code" class="form-input" placeholder="e.g. FIT-1024" required style="text-transform: uppercase;">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-description">Item Description / Plan</label>
+                    <div class="input-wrapper">
+                        <select id="payment-description" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                            <option value="Platinum Annual Renewal">Platinum Annual Renewal ($449.99)</option>
+                            <option value="Gold Quarterly Renewal">Gold Quarterly Renewal ($129.99)</option>
+                            <option value="Monthly Pass Renewal">Monthly Pass Renewal ($49.99)</option>
+                            <option value="Personal Trainer Add-on">Personal Trainer Add-on ($35.00)</option>
+                            <option value="Locker Rental Fee">Locker Rental Fee ($15.00)</option>
+                        </select>
+                        <i data-lucide="tag"></i>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="payment-amount">Amount ($)</label>
+                        <div class="input-wrapper">
+                            <input type="number" step="0.01" id="payment-amount" class="form-input" placeholder="49.99" required>
+                            <i data-lucide="dollar-sign"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment-method">Payment Channel</label>
+                        <div class="input-wrapper">
+                            <select id="payment-method" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Credit/Debit Card">Credit/Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Cash">Cash</option>
+                                <option value="POS Terminal">POS Terminal</option>
+                            </select>
+                            <i data-lucide="credit-card"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment-status">Transaction Status</label>
+                    <div class="input-wrapper">
+                        <select id="payment-status" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                            <option value="paid">Paid (Completed)</option>
+                            <option value="pending">Pending Invoice</option>
+                        </select>
+                        <i data-lucide="check-circle-2"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="savePaymentBtn">Process Payment</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="finance.html" class="bottom-nav-item active">
+            <i data-lucide="wallet"></i>
+            <span>Finance</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Specialized Glass Modal Styling -->
+    <style>
+        .transparent-glass-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 520px;
+            z-index: 1001;
+            display: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/finance.js"></script>
+</body>
+</html>

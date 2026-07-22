@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Reports & Analytics</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item active">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Business Intelligence & Performance</span>
+                        <h1 class="page-heading">Reports & Analytics</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="exportFullReportBtn">
+                        <i data-lucide="download"></i>
+                        <span>Export Summary CSV</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Date Range Filter Bar -->
+            <section class="quick-actions-bar" style="margin-bottom: 24px;">
+                <div class="content-card" style="padding: 16px 24px;">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                            <span style="font-size: 0.85rem; color: var(--text-secondary-gray); font-weight: 500;">Time Period:</span>
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="timeFilterGroup">
+                                <button class="table-action-btn filter-btn" data-period="7d">Last 7 Days</button>
+                                <button class="table-action-btn primary filter-btn active" data-period="30d">This Month</button>
+                                <button class="table-action-btn filter-btn" data-period="quarter">This Quarter</button>
+                                <button class="table-action-btn filter-btn" data-period="year">Year to Date</button>
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.8rem; color: var(--primary-rapid-red); font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+                            <span id="reportRangeText">Jul 1, 2026 – Jul 21, 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Performance Indicators (KPI Grid) -->
+            <section class="dashboard-kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Monthly Recurring Revenue</span>
+                        <i data-lucide="trending-up" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statMRR">$0.00</div>
+                    <span class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> +12.4% vs prev period</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Average Daily Check-Ins</span>
+                        <i data-lucide="activity" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statDailyCheckins">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="arrow-up-right"></i> +8.1% foot traffic</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Member Retention Rate</span>
+                        <i data-lucide="shield-check" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statRetentionRate">0%</div>
+                    <span class="kpi-trend positive"><i data-lucide="check"></i> 94.2% industry benchmark</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">New Member Signups</span>
+                        <i data-lucide="user-plus" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statNewSignups">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="trending-up"></i> +28 accounts added</span>
+                </div>
+            </section>
+
+            <!-- Chart Visualizations Section -->
+            <section class="dashboard-secondary-grid" style="margin-top: 24px;">
+                <!-- Revenue Trend Chart Card -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Revenue Trajectory ($)</h2>
+                            <p class="card-subtitle">Monthly breakdown across membership tiers</p>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="padding: 20px 0;">
+                        <div class="css-bar-chart" id="revenueBarChart">
+                            <!-- Dynamic Bars Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Peak Facility Foot Traffic Card -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Peak Gym Traffic Hours</h2>
+                            <p class="card-subtitle">Check-in distribution across operational hours</p>
+                        </div>
+                    </div>
+                    <div class="chart-container" style="padding: 20px 0;">
+                        <div class="peak-hours-list" id="peakHoursContainer" style="display: flex; flex-direction: column; gap: 12px;">
+                            <!-- Dynamic Progress Bars Injected by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Detailed Performance Ledger -->
+            <section class="dashboard-secondary-grid" style="margin-top: 24px;">
+                <div class="content-card full-width-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Membership & Revenue Breakdown</h2>
+                            <p class="card-subtitle">Performance stats categorized by membership plan tier</p>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Membership Tier</th>
+                                    <th>Active Accounts</th>
+                                    <th>Avg. Usage/Week</th>
+                                    <th>Monthly Gross</th>
+                                    <th>Renewal Rate</th>
+                                    <th>Status Trend</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportsTableBody">
+                                <!-- Dynamic dynamic content injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loadingState" style="text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 32px; height: 32px; margin-bottom: 8px;"></i>
+                        <p>Compiling performance analytics...</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="reports.html" class="bottom-nav-item active">
+            <i data-lucide="bar-chart-3"></i>
+            <span>Reports</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Chart Custom Glass Styles -->
+    <style>
+        .css-bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: 12px;
+            padding-top: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+        }
+
+        .bar-fill {
+            width: 100%;
+            max-width: 36px;
+            background: linear-gradient(180deg, var(--primary-rapid-red) 0%, rgba(255, 42, 42, 0.2) 100%);
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            transition: height 0.4s ease;
+            position: relative;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        .bar-label {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-secondary-gray);
+        }
+
+        .peak-hour-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .peak-hour-label {
+            font-size: 0.8rem;
+            color: var(--text-white);
+            width: 80px;
+        }
+
+        .peak-hour-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .peak-hour-bar-fill {
+            height: 100%;
+            background: var(--primary-rapid-red);
+            border-radius: 4px;
+        }
+
+        .peak-hour-count {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-white);
+            width: 50px;
+            text-align: right;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/reports.js"></script>
+</body>
+</html>

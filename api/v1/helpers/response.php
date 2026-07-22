@@ -1,0 +1,26 @@
+
+
+<?php
+
+function successResponse($message = 'Operation successful', $data = [])
+{
+    echo json_encode([
+        'success' => true,
+        'message' => $message,
+        'data' => $data
+    ]);
+
+    exit;
+}
+
+function errorResponse($message = 'An error occurred', $status = 400)
+{
+    http_response_code($status);
+
+    echo json_encode([
+        'success' => false,
+        'message' => $message
+    ]);
+
+    exit;
+}
