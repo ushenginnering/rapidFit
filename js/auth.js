@@ -12,15 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const resetPasswordForm = document.getElementById("resetPasswordForm");
     const biometricBtn = document.getElementById("biometricLoginBtn");
     const resendOtpBtn = document.getElementById("resendOtpBtn");
-    const loginGymIdInput = document.getElementById("login-gym-id");
     const copyGymIdBtn = document.getElementById("copyGymIdBtn");
-
-    if (loginGymIdInput) {
-        const savedGymId = localStorage.getItem('rapidfit_gym_id');
-        if (savedGymId) {
-            loginGymIdInput.value = savedGymId;
-        }
-    }
 
     // --- 3D BOOK ENGINE ---
     window.switchBookState = function (nextStateId) {
@@ -130,15 +122,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const gymId = Number(document.getElementById("login-gym-id").value);
             const identity = document.getElementById("login-identity").value.trim();
             const password = document.getElementById("login-password").value;
             const rememberMe = document.getElementById("rememberMe").checked;
-
-            if (!gymId || gymId <= 0) {
-                triggerToast("Validation error: Gym ID is required.");
-                return;
-            }
 
             if (!identity) {
                 triggerToast("Validation error: Enter your username or email.");
@@ -153,17 +139,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const stopLoading = performButtonLoading(loginForm, "Authenticating...");
 
             try {
-                // Build the login payload
+                // Build the login payload — use stored gym_id from localStorage if available
+                const storedGymId = localStorage.getItem('rapidfit_gym_id');
                 const payload = {
-                    gym_id: gymId,
                     email: identity,
                     password
                 };
+                if (storedGymId) {
+                    payload.gym_id = Number(storedGymId);
+                }
 
                 const response = await api.post('auth/login', payload);
 
                 localStorage.setItem('rapidfit_token', response.data.token);
-                localStorage.setItem('rapidfit_gym_id', String(gymId));
+                if (storedGymId) {
+                    localStorage.setItem('rapidfit_gym_id', storedGymId);
+                }
                 localStorage.setItem('rapidfit_user', JSON.stringify(response.data.user));
 
                 // Save gym_id from response if available (first login after signup)
@@ -240,7 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (finalGymId) {
                     gymIdValue.textContent = finalGymId;
                     gymIdNotice.hidden = false;
-                    if (loginGymIdInput) loginGymIdInput.value = finalGymId;
                 } else {
                     // Keep system stable even if backend payload shape changes
                     gymIdNotice.hidden = true;

@@ -1,4 +1,44 @@
-const API_BASE = 'https://gym.rapidsuite.ng/api/v1/';
+/**
+ * API Helper - Universal Configuration
+ * 
+ * This file works in three modes:
+ * 1. Dev mode (proxy): Access via http://localhost:3000/Pages/login.html → same-origin fetch to proxy
+ * 2. Dev mode (Live Server): Access via any other local server → cors fetch to localhost:3000 proxy
+ * 3. Production: Deployed to live server → direct fetch to API
+ * 
+ * The proxy (server.js) runs on localhost:3000 and handles API calls without CORS issues.
+ * Make sure to start it with: node server.js
+ */
+
+const host = window.location.hostname;
+const port = window.location.port;
+
+// Determine if we're running locally (any local server)
+const IS_LOCAL = host === 'localhost' || host === '127.0.0.1';
+
+// If we're on the proxy itself (port 3000), use root-relative URLs
+const ON_PROXY = IS_LOCAL && port === '3000';
+
+// Proxy server URL (for Live Server or other local setups)
+const PROXY_URL = 'http://localhost:3000';
+
+// Choose API base URL
+let API_BASE;
+let FETCH_MODE;
+
+if (ON_PROXY) {
+    // Directly on proxy server — same origin, root-relative paths
+    API_BASE = '/';
+    FETCH_MODE = 'same-origin';
+} else if (IS_LOCAL) {
+    // On Live Server or any local server — use proxy via CORS
+    API_BASE = PROXY_URL + '/';
+    FETCH_MODE = 'cors';
+} else {
+    // Production — use direct API URL
+    API_BASE = 'https://gym.rapidsuite.ng/api/v1/';
+    FETCH_MODE = 'cors';
+}
 
 function getStoredToken() {
     return localStorage.getItem('rapidfit_token') || '';
@@ -30,6 +70,7 @@ async function apiRequest(endpoint, options = {}) {
     const requestOptions = {
         method,
         headers,
+        mode: FETCH_MODE,
     };
 
     if (options.body !== undefined && options.body !== null) {
