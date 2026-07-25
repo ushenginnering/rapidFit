@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>RapidFit Console - Instructor Management</title>
+    
+    <!-- PWA Primary Optimization Meta Tags -->
+    <meta name="theme-color" content="#080808">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="RapidFit">
+    <link rel="apple-touch-icon" href="../assets/logo/logo.png">
+    <link rel="manifest" href="../../manifest.json">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../css/dashboard.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Fixed Glass Sidebar Navigation -->
+        <aside class="sidebar-glass" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo-container">
+                    <img src="../assets/img/logo.png" alt="RapidFit Logo" class="brand-logo-img">
+                </div>
+                <button class="close-sidebar-btn" id="closeSidebarBtn">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="members.html" class="nav-item">
+                    <i data-lucide="users"></i>
+                    <span>Members</span>
+                </a>
+                <a href="checkin.html" class="nav-item">
+                    <i data-lucide="qr-code"></i>
+                    <span>Check-In</span>
+                </a>
+                <a href="plans.html" class="nav-item">
+                    <i data-lucide="badge-percent"></i>
+                    <span>Membership Plans</span>
+                </a>
+                <a href="finance.html" class="nav-item">
+                    <i data-lucide="wallet"></i>
+                    <span>Finance</span>
+                </a>
+                <a href="corporate.html" class="nav-item">
+                    <i data-lucide="building-2"></i>
+                    <span>Corporate Accounts</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <i data-lucide="bar-chart-3"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="staff.html" class="nav-item">
+                    <i data-lucide="user-cog"></i>
+                    <span>Staff</span>
+                </a>
+                <a href="equipment.html" class="nav-item">
+                    <i data-lucide="dumbbell"></i>
+                    <span>Equipment</span>
+                </a>
+                <a href="instructor.html" class="nav-item active">
+                    <i data-lucide="graduation-cap"></i>
+                    <span>Instructors</span>
+                </a>
+                <a href="settings.html" class="nav-item">
+                    <i data-lucide="settings"></i>
+                    <span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="nav-item logout-btn" id="logoutBtn">
+                    <i data-lucide="log-out"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Header Bar -->
+            <header class="topbar-glass">
+                <div class="topbar-left">
+                    <button class="menu-toggle-btn" id="menuToggleBtn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <span class="sub-tag">Fitness Team</span>
+                        <h1 class="page-heading">Instructors</h1>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="quick-checkin-btn" id="openAddInstructorBtn">
+                        <i data-lucide="plus-circle"></i>
+                        <span>Add Instructor</span>
+                    </button>
+                    <div class="user-profile-avatar">
+                        <span class="avatar-initials">UM</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Instructor KPI Summary Cards -->
+            <section class="dashboard-kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Total Instructors</span>
+                        <i data-lucide="graduation-cap" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statTotalInstructors">0</div>
+                    <span class="kpi-trend neutral"><i data-lucide="users"></i> Certified professionals</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">Available</span>
+                        <i data-lucide="check-circle" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statAvailable">0</div>
+                    <span class="kpi-trend positive"><i data-lucide="thumbs-up"></i> Ready for sessions</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">In Session</span>
+                        <i data-lucide="activity" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statInSession">0</div>
+                    <span class="kpi-trend neutral"><i data-lucide="zap"></i> Currently training</span>
+                </div>
+
+                <div class="kpi-card">
+                    <div class="kpi-header">
+                        <span class="kpi-title">On Leave</span>
+                        <i data-lucide="calendar-off" class="kpi-icon"></i>
+                    </div>
+                    <div class="kpi-value" id="statOnLeave">0</div>
+                    <span class="kpi-trend negative"><i data-lucide="alert-triangle"></i> Not available</span>
+                </div>
+            </section>
+
+            <!-- Search & Filter Controls -->
+            <section class="quick-actions-bar" style="margin-top: 24px;">
+                <div class="content-card" style="padding: 16px 24px;">
+                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+                        
+                        <!-- Search Bar -->
+                        <div class="input-wrapper" style="flex-grow: 1; max-width: 400px; min-width: 260px;">
+                            <input type="text" id="instructorSearchInput" class="form-input" placeholder="Search by name, email, or specialization..." style="background: rgba(255, 255, 255, 0.03);">
+                            <i data-lucide="search"></i>
+                        </div>
+
+                        <!-- Status Filter Buttons -->
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;" id="statusFilterGroup">
+                            <button class="table-action-btn primary filter-btn active" data-status="all">All</button>
+                            <button class="table-action-btn filter-btn" data-status="available">Available</button>
+                            <button class="table-action-btn filter-btn" data-status="insession">In Session</button>
+                            <button class="table-action-btn filter-btn" data-status="leave">On Leave</button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- Instructors Data Table -->
+            <section class="dashboard-secondary-grid">
+                <div class="content-card full-width-card">
+                    <div class="card-header">
+                        <div>
+                            <h2 class="card-title">Instructor Roster</h2>
+                            <p class="card-subtitle">Manage fitness instructors, certifications, and schedules</p>
+                        </div>
+                        <button class="table-action-btn" id="exportInstructorCsvBtn">
+                            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+                            <span>Export Roster</span>
+                        </button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Instructor ID</th>
+                                    <th>Name</th>
+                                    <th>Specialization</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th style="text-align: right;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="instructorTableBody">
+                                <!-- Dynamic rows injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Loading & Empty States -->
+                    <div id="loadingState" style="text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="loader-2" style="animation: spin 1s linear infinite; width: 32px; height: 32px; margin-bottom: 8px;"></i>
+                        <p>Loading instructor roster...</p>
+                    </div>
+
+                    <div id="emptyState" style="display: none; text-align: center; padding: 40px; color: var(--text-secondary-gray);">
+                        <i data-lucide="graduation-cap" style="width: 48px; height: 48px; margin-bottom: 12px; color: rgba(255,255,255,0.2);"></i>
+                        <h3>No instructors found</h3>
+                        <p style="font-size: 0.85rem;">Try adjusting your search criteria or add a new instructor to the roster.</p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- Add / Edit Instructor Modal -->
+    <div class="sidebar-overlay" id="modalOverlay">
+        <div class="content-card transparent-glass-modal" id="instructorModal">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="modalTitle">Add Instructor</h2>
+                    <p class="card-subtitle">Register a new fitness instructor</p>
+                </div>
+                <button id="closeModalBtn" style="background: none; border: none; color: var(--text-white); cursor: pointer;">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <form id="instructorForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <input type="hidden" id="instructor-id">
+
+                <div class="form-group">
+                    <label for="instructor-name">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="instructor-name" class="form-input" placeholder="e.g. John Smith" required>
+                        <i data-lucide="user"></i>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="instructor-specialization">Specialization</label>
+                        <div class="input-wrapper">
+                            <select id="instructor-specialization" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Personal Training">Personal Training</option>
+                                <option value="Yoga">Yoga</option>
+                                <option value="Pilates">Pilates</option>
+                                <option value="HIIT">HIIT / Cardio</option>
+                                <option value="Strength & Conditioning">Strength & Conditioning</option>
+                                <option value="Zumba">Zumba / Dance</option>
+                                <option value="Spinning">Spinning</option>
+                                <option value="CrossFit">CrossFit</option>
+                                <option value="Martial Arts">Martial Arts</option>
+                                <option value="Rehabilitation">Rehabilitation</option>
+                            </select>
+                            <i data-lucide="layers"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructor-status">Status</label>
+                        <div class="input-wrapper">
+                            <select id="instructor-status" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="available">Available</option>
+                                <option value="insession">In Session</option>
+                                <option value="leave">On Leave</option>
+                            </select>
+                            <i data-lucide="activity"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="instructor-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="instructor-email" class="form-input" placeholder="instructor@gym.com" required>
+                            <i data-lucide="mail"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructor-phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="instructor-phone" class="form-input" placeholder="+1 (555) 000-0000" required>
+                            <i data-lucide="phone"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="saveInstructorBtn">Save Instructor</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Quick Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="dashboard.html" class="bottom-nav-item">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="members.html" class="bottom-nav-item">
+            <i data-lucide="users"></i>
+            <span>Members</span>
+        </a>
+        <a href="checkin.html" class="bottom-nav-item highlight">
+            <i data-lucide="scan-line"></i>
+            <span>Check-In</span>
+        </a>
+        <a href="instructor.html" class="bottom-nav-item active">
+            <i data-lucide="graduation-cap"></i>
+            <span>Instructors</span>
+        </a>
+        <a href="settings.html" class="bottom-nav-item">
+            <i data-lucide="settings"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Specialized Glass Modal Styling -->
+    <style>
+        .transparent-glass-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 520px;
+            z-index: 1001;
+            display: none;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            -webkit-backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Scripts -->
+    <script src="../js/api.js"></script>
+    <script src="../js/instructors.js"></script>
+</body>
+</html>
