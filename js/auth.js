@@ -379,8 +379,8 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 const response = await api.post('auth/reset-password', {
                     email: resetEmail,
-                    password: newPass,
-                    password_confirmation: confirmPass
+                    new_password: newPass,
+                    confirm_password: confirmPass
                 });
 
                 // Clear stored email
