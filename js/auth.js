@@ -383,6 +383,18 @@ document.addEventListener("DOMContentLoaded", () => {
                     confirm_password: confirmPass
                 });
 
+                // Save token to localStorage if the API returns one
+                if (response.data?.token) {
+                    localStorage.setItem('rapidfit_token', response.data.token);
+                }
+                if (response.data?.user) {
+                    localStorage.setItem('rapidfit_user', JSON.stringify(response.data.user));
+                }
+                if (response.data?.user?.gym_id || response.data?.gym?.id) {
+                    const gymId = response.data.user?.gym_id || response.data.gym?.id;
+                    localStorage.setItem('rapidfit_gym_id', String(gymId));
+                }
+
                 // Clear stored email
                 localStorage.removeItem('rapidfit_reset_email');
                 
