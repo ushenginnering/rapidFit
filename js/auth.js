@@ -266,7 +266,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
 
-                // Do NOT auto-switch — let the user see their Gym ID first
+                // Auto-redirect to login page after successful registration
+                setTimeout(() => {
+                    window.switchBookState('state-login');
+                    // Reset flipped pages
+                    document.querySelectorAll('.auth-state').forEach(page => {
+                        if (page.id !== 'state-login') {
+                            page.classList.remove('flipped');
+                        }
+                    });
+                }, 3000);
             } catch (error) {
                 triggerToast(error.message || 'Registration failed. Please try again.');
             } finally {
