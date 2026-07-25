@@ -45,8 +45,20 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             // API: GET /instructors with Bearer token (handled by api.js automatically)
             const response = await api.get('instructors');
-            if (response && response.success) {
-                instructorsData = response.data;
+            // Handle multiple API response formats:
+            // 1. { success: true, data: [...] }
+            // 2. { data: [...] }
+            // 3. Direct array [...]
+            if (response) {
+                if (Array.isArray(response)) {
+                    instructorsData = response;
+                } else if (Array.isArray(response.data)) {
+                    instructorsData = response.data;
+                } else if (Array.isArray(response.instructors)) {
+                    instructorsData = response.instructors;
+                } else {
+                    instructorsData = getMockInstructors();
+                }
             } else {
                 instructorsData = getMockInstructors();
             }
@@ -63,9 +75,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // 3. Compute KPI Summary Values
     function updateKPIs() {
         const total = instructorsData.length;
-        const available = instructorsData.filter(i => i.status === "available").length;
+        // API returns status as "active" or "inactive"
+        const available = instructorsData.filter(i => i.status === "active" || i.status === "available").length;
         const inSession = instructorsData.filter(i => i.status === "insession").length;
-        const onLeave = instructorsData.filter(i => i.status === "leave").length;
+        const onLeave = instructorsData.filter(i => i.status === "inactive" || i.status === "leave").length;
 
         statTotalInstructors.textContent = total;
         statAvailable.textContent = available;
@@ -78,14 +91,24 @@ document.addEventListener("DOMContentLoaded", () => {
         instructorTableBody.innerHTML = "";
 
         const filtered = instructorsData.filter(item => {
+            // Build full name from first_name + last_name or use name field
+            const fullName = item.first_name && item.last_name 
+                ? `${item.first_name} ${item.last_name}` 
+                : (item.name || "");
+            
             const matchesSearch =
-                item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.specialization.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                item.id.toLowerCase().includes(searchQuery.toLowerCase());
+                fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (item.email || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (item.specialization || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (item.id || "").toLowerCase().includes(searchQuery.toLowerCase());
+
+            // Map API status to filter status
+            const itemStatus = item.status === "active" ? "available" : 
+                               item.status === "inactive" ? "leave" : 
+                               item.status || "available";
 
             const matchesStatus =
-                currentFilter === "all" ? true : item.status === currentFilter;
+                currentFilter === "all" ? true : itemStatus === currentFilter;
 
             return matchesSearch && matchesStatus;
         });
@@ -100,13 +123,10 @@ document.addEventListener("DOMContentLoaded", () => {
         filtered.forEach(item => {
             const row = document.createElement("tr");
 
-            let badgeClass = "badge-success";
-            let statusText = "Active";
-
-            if (item.status === "inactive") {
-                badgeClass = "badge-danger";
-                statusText = "Inactive";
-            }
+            // Map API status to display status
+            const isActive = item.status === "active" || item.status === "available";
+            let badgeClass = isActive ? "badge-success" : "badge-danger";
+            let statusText = isActive ? "Active" : "Inactive";
 
             const fullName = item.first_name && item.last_name ? `${item.first_name} ${item.last_name}` : (item.name || "Unknown");
 
@@ -158,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    const filterBtns = document.querySelectorAll("#statusFilterGroup .filter-btn");
+    const filterBtns = document.querySelectorAll("#statusFilterGroup .filter-btn, [data-status]");
     filterBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             filterBtns.forEach(b => b.classList.remove("primary", "active"));
