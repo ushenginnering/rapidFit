@@ -101,23 +101,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const row = document.createElement("tr");
 
             let badgeClass = "badge-success";
-            let statusText = "Available";
+            let statusText = "Active";
 
-            if (item.status === "insession") {
-                badgeClass = "badge-warning";
-                statusText = "In Session";
-            } else if (item.status === "leave") {
+            if (item.status === "inactive") {
                 badgeClass = "badge-danger";
-                statusText = "On Leave";
+                statusText = "Inactive";
             }
+
+            const fullName = item.first_name && item.last_name ? `${item.first_name} ${item.last_name}` : (item.name || "Unknown");
 
             row.innerHTML = `
                 <td><strong style="color: var(--primary-rapid-red); font-size: 0.85rem;">${item.id}</strong></td>
                 <td>
                     <div class="table-user-cell">
-                        <div class="table-avatar">${getInitials(item.name)}</div>
+                        <div class="table-avatar">${getInitials(fullName)}</div>
                         <div>
-                            <div class="user-name">${item.name}</div>
+                            <div class="user-name">${fullName}</div>
                         </div>
                     </div>
                 </td>
@@ -189,11 +188,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (instructor) {
             modalTitle.textContent = "Edit Instructor";
             document.getElementById("instructor-id").value = instructor.id;
-            document.getElementById("instructor-name").value = instructor.name;
-            document.getElementById("instructor-specialization").value = instructor.specialization;
-            document.getElementById("instructor-status").value = instructor.status;
+            document.getElementById("instructor-first-name").value = instructor.first_name;
+            document.getElementById("instructor-last-name").value = instructor.last_name;
             document.getElementById("instructor-email").value = instructor.email;
             document.getElementById("instructor-phone").value = instructor.phone;
+            document.getElementById("instructor-gender").value = instructor.gender;
+            document.getElementById("instructor-dob").value = instructor.date_of_birth;
+            document.getElementById("instructor-address").value = instructor.address;
+            document.getElementById("instructor-specialization").value = instructor.specialization;
+            document.getElementById("instructor-status").value = instructor.status;
+            document.getElementById("instructor-bio").value = instructor.bio || "";
+            document.getElementById("instructor-profile-image").value = instructor.profile_image || "";
         } else {
             modalTitle.textContent = "Add Instructor";
             document.getElementById("instructor-id").value = "";
@@ -216,12 +221,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const existingId = document.getElementById("instructor-id").value;
 
             const payload = {
-                id: existingId || "INS-" + Math.floor(100 + Math.random() * 900),
-                name: document.getElementById("instructor-name").value,
-                specialization: document.getElementById("instructor-specialization").value,
-                status: document.getElementById("instructor-status").value,
+                first_name: document.getElementById("instructor-first-name").value,
+                last_name: document.getElementById("instructor-last-name").value,
                 email: document.getElementById("instructor-email").value,
-                phone: document.getElementById("instructor-phone").value
+                phone: document.getElementById("instructor-phone").value,
+                gender: document.getElementById("instructor-gender").value,
+                date_of_birth: document.getElementById("instructor-dob").value,
+                address: document.getElementById("instructor-address").value,
+                specialization: document.getElementById("instructor-specialization").value,
+                bio: document.getElementById("instructor-bio").value,
+                profile_image: document.getElementById("instructor-profile-image").value,
+                status: document.getElementById("instructor-status").value
             };
 
             const saveBtn = document.getElementById("saveInstructorBtn");
@@ -278,11 +288,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function optimisticSave(payload, existingId) {
+        const fullName = `${payload.first_name} ${payload.last_name}`;
+        const newEntry = {
+            id: existingId || "INS-" + Math.floor(100 + Math.random() * 900),
+            ...payload,
+            name: fullName
+        };
+
         if (existingId) {
             const index = instructorsData.findIndex(i => i.id === existingId);
-            if (index !== -1) instructorsData[index] = payload;
+            if (index !== -1) instructorsData[index] = newEntry;
         } else {
-            instructorsData.unshift(payload);
+            instructorsData.unshift(newEntry);
         }
         updateKPIs();
         renderInstructorTable();
@@ -290,14 +307,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function getMockInstructors() {
         return [
-            { id: "INS-101", name: "Marcus Vance", specialization: "Personal Training", email: "marcus.v@rapidfit.com", phone: "+1 (555) 019-2834", status: "available" },
-            { id: "INS-102", name: "Sofia Reyes", specialization: "Yoga", email: "sofia.r@rapidfit.com", phone: "+1 (555) 438-9102", status: "insession" },
-            { id: "INS-103", name: "James Carter", specialization: "HIIT / Cardio", email: "james.c@rapidfit.com", phone: "+1 (555) 782-3311", status: "available" },
-            { id: "INS-104", name: "Priya Sharma", specialization: "Pilates", email: "priya.s@rapidfit.com", phone: "+1 (555) 901-4422", status: "leave" },
-            { id: "INS-105", name: "Alex Thompson", specialization: "Strength & Conditioning", email: "alex.t@rapidfit.com", phone: "+1 (555) 367-8901", status: "available" },
-            { id: "INS-106", name: "Lisa Chen", specialization: "Zumba / Dance", email: "lisa.c@rapidfit.com", phone: "+1 (555) 234-5678", status: "insession" },
-            { id: "INS-107", name: "David Okafor", specialization: "Martial Arts", email: "david.o@rapidfit.com", phone: "+1 (555) 876-5432", status: "available" },
-            { id: "INS-108", name: "Emma Wilson", specialization: "Rehabilitation", email: "emma.w@rapidfit.com", phone: "+1 (555) 654-3210", status: "available" }
+            { id: "INS-101", first_name: "Marcus", last_name: "Vance", name: "Marcus Vance", email: "marcus.v@rapidfit.com", phone: "+1 (555) 019-2834", gender: "male", date_of_birth: "1985-06-15", address: "12 Fitness Ave, New York", specialization: "Personal Training", bio: "Certified personal trainer with 10+ years experience.", profile_image: "", status: "active" },
+            { id: "INS-102", first_name: "Sofia", last_name: "Reyes", name: "Sofia Reyes", email: "sofia.r@rapidfit.com", phone: "+1 (555) 438-9102", gender: "female", date_of_birth: "1990-03-22", address: "45 Yoga Lane, Los Angeles", specialization: "Yoga", bio: "Experienced yoga instructor specializing in Vinyasa and Hatha.", profile_image: "", status: "active" },
+            { id: "INS-103", first_name: "James", last_name: "Carter", name: "James Carter", email: "james.c@rapidfit.com", phone: "+1 (555) 782-3311", gender: "male", date_of_birth: "1988-11-08", address: "78 HIIT Street, Chicago", specialization: "HIIT / Cardio", bio: "High-intensity interval training specialist.", profile_image: "", status: "active" },
+            { id: "INS-104", first_name: "Priya", last_name: "Sharma", name: "Priya Sharma", email: "priya.s@rapidfit.com", phone: "+1 (555) 901-4422", gender: "female", date_of_birth: "1992-07-14", address: "33 Pilates Court, San Francisco", specialization: "Pilates", bio: "Pilates instructor focused on core strength and flexibility.", profile_image: "", status: "inactive" },
+            { id: "INS-105", first_name: "Alex", last_name: "Thompson", name: "Alex Thompson", email: "alex.t@rapidfit.com", phone: "+1 (555) 367-8901", gender: "male", date_of_birth: "1986-09-30", address: "90 Strength Blvd, Miami", specialization: "Strength Training", bio: "Strength and conditioning coach for athletes.", profile_image: "", status: "active" },
+            { id: "INS-106", first_name: "Lisa", last_name: "Chen", name: "Lisa Chen", email: "lisa.c@rapidfit.com", phone: "+1 (555) 234-5678", gender: "female", date_of_birth: "1991-12-05", address: "22 Dance Road, Seattle", specialization: "Zumba / Dance", bio: "Energetic Zumba instructor making fitness fun.", profile_image: "", status: "active" },
+            { id: "INS-107", first_name: "David", last_name: "Okafor", name: "David Okafor", email: "david.o@rapidfit.com", phone: "+1 (555) 876-5432", gender: "male", date_of_birth: "1984-04-18", address: "15 Martial Arts Way, Houston", specialization: "Martial Arts", bio: "Black belt instructor in Karate and Taekwondo.", profile_image: "", status: "active" },
+            { id: "INS-108", first_name: "Emma", last_name: "Wilson", name: "Emma Wilson", email: "emma.w@rapidfit.com", phone: "+1 (555) 654-3210", gender: "female", date_of_birth: "1989-08-25", address: "55 Recovery Road, Boston", specialization: "Rehabilitation", bio: "Physical therapy and rehabilitation specialist.", profile_image: "", status: "active" }
         ];
     }
 });

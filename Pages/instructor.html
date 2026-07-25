@@ -252,11 +252,68 @@
             <form id="instructorForm" style="display: flex; flex-direction: column; gap: 16px;">
                 <input type="hidden" id="instructor-id">
 
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="instructor-first-name">First Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="instructor-first-name" class="form-input" placeholder="e.g. John" required>
+                            <i data-lucide="user"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructor-last-name">Last Name</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="instructor-last-name" class="form-input" placeholder="e.g. Doe" required>
+                            <i data-lucide="user"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="instructor-email">Email Address</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="instructor-email" class="form-input" placeholder="john.doe@example.com" required>
+                            <i data-lucide="mail"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructor-phone">Phone Number</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="instructor-phone" class="form-input" placeholder="+2348012345678" required>
+                            <i data-lucide="phone"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group">
+                        <label for="instructor-gender">Gender</label>
+                        <div class="input-wrapper">
+                            <select id="instructor-gender" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                            <i data-lucide="users"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructor-dob">Date of Birth</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="instructor-dob" class="form-input" required>
+                            <i data-lucide="calendar"></i>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label for="instructor-name">Full Name</label>
+                    <label for="instructor-address">Address</label>
                     <div class="input-wrapper">
-                        <input type="text" id="instructor-name" class="form-input" placeholder="e.g. John Smith" required>
-                        <i data-lucide="user"></i>
+                        <input type="text" id="instructor-address" class="form-input" placeholder="12 Stadium Road, Port Harcourt" required>
+                        <i data-lucide="map-pin"></i>
                     </div>
                 </div>
 
@@ -265,12 +322,12 @@
                         <label for="instructor-specialization">Specialization</label>
                         <div class="input-wrapper">
                             <select id="instructor-specialization" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
+                                <option value="Strength Training">Strength Training</option>
                                 <option value="Personal Training">Personal Training</option>
                                 <option value="Yoga">Yoga</option>
                                 <option value="Pilates">Pilates</option>
-                                <option value="HIIT">HIIT / Cardio</option>
-                                <option value="Strength & Conditioning">Strength & Conditioning</option>
-                                <option value="Zumba">Zumba / Dance</option>
+                                <option value="HIIT / Cardio">HIIT / Cardio</option>
+                                <option value="Zumba / Dance">Zumba / Dance</option>
                                 <option value="Spinning">Spinning</option>
                                 <option value="CrossFit">CrossFit</option>
                                 <option value="Martial Arts">Martial Arts</option>
@@ -284,30 +341,27 @@
                         <label for="instructor-status">Status</label>
                         <div class="input-wrapper">
                             <select id="instructor-status" class="form-input" style="appearance: none; background: rgba(0,0,0,0.5);" required>
-                                <option value="available">Available</option>
-                                <option value="insession">In Session</option>
-                                <option value="leave">On Leave</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
                             </select>
                             <i data-lucide="activity"></i>
                         </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="form-group">
-                        <label for="instructor-email">Email Address</label>
-                        <div class="input-wrapper">
-                            <input type="email" id="instructor-email" class="form-input" placeholder="instructor@gym.com" required>
-                            <i data-lucide="mail"></i>
-                        </div>
+                <div class="form-group">
+                    <label for="instructor-bio">Bio</label>
+                    <div class="input-wrapper">
+                        <textarea id="instructor-bio" class="form-input" placeholder="Certified fitness instructor specializing in strength and conditioning." rows="3" style="resize: vertical; background: rgba(0,0,0,0.5);"></textarea>
+                        <i data-lucide="file-text" style="align-self: flex-start; margin-top: 12px;"></i>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="instructor-phone">Phone Number</label>
-                        <div class="input-wrapper">
-                            <input type="tel" id="instructor-phone" class="form-input" placeholder="+1 (555) 000-0000" required>
-                            <i data-lucide="phone"></i>
-                        </div>
+                <div class="form-group">
+                    <label for="instructor-profile-image">Profile Image URL</label>
+                    <div class="input-wrapper">
+                        <input type="url" id="instructor-profile-image" class="form-input" placeholder="https://example.com/photo.jpg">
+                        <i data-lucide="image"></i>
                     </div>
                 </div>
 
