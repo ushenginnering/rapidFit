@@ -49,6 +49,21 @@ document.addEventListener("DOMContentLoaded", () => {
         trigger.addEventListener('click', (e) => {
             e.preventDefault();
             const targetState = trigger.getAttribute('data-target');
+            
+            // Clear saved Gym ID when navigating TO signup (fresh registration)
+            if (targetState === 'state-signup') {
+                // Remove any previously saved pre-fill so it's a truly fresh registration
+                const gymIdNotice = document.getElementById('gymIdNotice');
+                if (gymIdNotice) gymIdNotice.hidden = true;
+                
+                // Remove the dynamic "Go to Log In" link if it was added
+                const existingLink = document.getElementById('gotoLoginAfterSignup');
+                if (existingLink) existingLink.remove();
+                
+                // Clear the signup form fields for a fresh start
+                if (signUpForm) signUpForm.reset();
+            }
+            
             window.switchBookState(targetState);
         });
     });
@@ -116,18 +131,17 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
 
             const gymId = Number(document.getElementById("login-gym-id").value);
-            const email = document.getElementById("login-identity").value.trim();
+            const identity = document.getElementById("login-identity").value.trim();
             const password = document.getElementById("login-password").value;
             const rememberMe = document.getElementById("rememberMe").checked;
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!gymId || gymId <= 0) {
                 triggerToast("Validation error: Gym ID is required.");
                 return;
             }
 
-            if (!emailPattern.test(email)) {
-                triggerToast("Validation error: Enter a valid email address.");
+            if (!identity) {
+                triggerToast("Validation error: Enter your username or email.");
                 return;
             }
 
@@ -139,15 +153,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const stopLoading = performButtonLoading(loginForm, "Authenticating...");
 
             try {
-                const response = await api.post('auth/login', {
+                // Build the login payload
+                const payload = {
                     gym_id: gymId,
-                    email,
+                    email: identity,
                     password
-                });
+                };
+
+                const response = await api.post('auth/login', payload);
 
                 localStorage.setItem('rapidfit_token', response.data.token);
                 localStorage.setItem('rapidfit_gym_id', String(gymId));
                 localStorage.setItem('rapidfit_user', JSON.stringify(response.data.user));
+
+                // Save gym_id from response if available (first login after signup)
+                if (response.data?.user?.gym_id) {
+                    localStorage.setItem('rapidfit_gym_id', String(response.data.user.gym_id));
+                }
 
                 if (rememberMe) {
                     localStorage.setItem('rapidfit_remember_me', '1');
@@ -230,11 +252,31 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 localStorage.setItem('rapidfit_user', JSON.stringify(response.data.user));
 
+                // Show success toast
                 triggerToast(`Account setup complete! Your gym ID is ${finalGymId || 'ready'}. Save it for login.`);
-                if (finalGymId && document.getElementById('login-gym-id')) {
-                    document.getElementById('login-gym-id').value = String(finalGymId);
+
+                // Make the Gym ID notice visible and scroll it into view
+                const noticeEl = document.getElementById('gymIdNotice');
+                if (noticeEl) {
+                    noticeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                window.switchBookState('state-login');
+
+                // Also add a "Proceed to Login" button below the notice
+                // Show a "Go to Login" link if not already visible
+                const existingLoginLink = document.getElementById('gotoLoginAfterSignup');
+                if (!existingLoginLink) {
+                    const signupFooterNav = document.querySelector('#state-signup .footer-navigation');
+                    if (signupFooterNav) {
+                        const gotoLogin = document.createElement('div');
+                        gotoLogin.id = 'gotoLoginAfterSignup';
+                        gotoLogin.className = 'footer-navigation';
+                        gotoLogin.style.marginTop = '18px';
+                        gotoLogin.innerHTML = `Account created! <span class="nav-trigger" data-target="state-login">Go to Log In →</span>`;
+                        signupFooterNav.parentNode.insertBefore(gotoLogin, signupFooterNav.nextSibling);
+                    }
+                }
+
+                // Do NOT auto-switch — let the user see their Gym ID first
             } catch (error) {
                 triggerToast(error.message || 'Registration failed. Please try again.');
             } finally {
@@ -245,22 +287,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Forgot Request Handle
     if (forgotForm) {
-        forgotForm.addEventListener("submit", (e) => {
+        forgotForm.addEventListener("submit", async (e) => {
             e.preventDefault();
-            const email = document.getElementById("forgot-email").value;
+            const email = document.getElementById("forgot-email").value.trim();
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                triggerToast("Validation error: Enter a valid email address.");
+                return;
+            }
+
             const stopLoading = performButtonLoading(forgotForm, "Sending OTP...");
 
-            setTimeout(() => {
-                stopLoading();
-                triggerToast(`A secure OTP key has been sent to ${email}`);
+            try {
+                const response = await api.post('auth/forgot-password', { email });
+                triggerToast(response.message || 'A verification code has been sent to your email.');
                 window.switchBookState('state-otp');
-            }, 1200);
+            } catch (error) {
+                triggerToast(error.message || 'Failed to send OTP. Please try again.');
+            } finally {
+                stopLoading();
+            }
         });
     }
 
     // Security Verification Handle
     if (otpForm) {
-        otpForm.addEventListener("submit", (e) => {
+        otpForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             let rawCode = "";
             otpInputs.forEach(i => rawCode += i.value);
@@ -270,14 +323,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            triggerToast("OTP Verification Cleared!");
-            window.switchBookState('state-create-password');
+            // Get the email from the forgot password form
+            const forgotEmail = document.getElementById("forgot-email").value.trim();
+            if (!forgotEmail) {
+                triggerToast("Session expired. Please start the forgot password process again.");
+                return;
+            }
+
+            const stopLoading = performButtonLoading(otpForm, "Verifying OTP...");
+
+            try {
+                const response = await api.post('auth/verify-otp', {
+                    otp: Number(rawCode),
+                    email: forgotEmail
+                });
+                
+                // Store the email for reset-password step
+                localStorage.setItem('rapidfit_reset_email', forgotEmail);
+                triggerToast(response.message || 'OTP verified successfully.');
+                window.switchBookState('state-create-password');
+            } catch (error) {
+                triggerToast(error.message || 'Invalid or expired OTP. Please try again.');
+            } finally {
+                stopLoading();
+            }
         });
     }
 
     // Reset Master Key Handle
     if (resetPasswordForm) {
-        resetPasswordForm.addEventListener("submit", (e) => {
+        resetPasswordForm.addEventListener("submit", async (e) => {
             e.preventDefault();
             const newPass = document.getElementById("new-password").value;
             const confirmPass = document.getElementById("confirm-password").value;
@@ -287,17 +362,46 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            triggerToast("Master password changed. Sign in with your new credentials.");
-            window.switchBookState('state-login');
+            if (newPass.length < 8) {
+                triggerToast("Validation error: Password must be at least 8 characters.");
+                return;
+            }
 
-            // Reset flipped pages
-            setTimeout(() => {
-                document.querySelectorAll('.auth-state').forEach(page => {
-                    if (page.id !== 'state-login') {
-                        page.classList.remove('flipped');
-                    }
+            // Get the email stored during OTP verification
+            const resetEmail = localStorage.getItem('rapidfit_reset_email');
+            if (!resetEmail) {
+                triggerToast("Session expired. Please start the forgot password process again.");
+                return;
+            }
+
+            const stopLoading = performButtonLoading(resetPasswordForm, "Resetting Password...");
+
+            try {
+                const response = await api.post('auth/reset-password', {
+                    email: resetEmail,
+                    password: newPass,
+                    password_confirmation: confirmPass
                 });
-            }, 800);
+
+                // Clear stored email
+                localStorage.removeItem('rapidfit_reset_email');
+                
+                triggerToast(response.message || 'Password reset successful. Sign in with your new credentials.');
+                window.switchBookState('state-login');
+
+                // Reset flipped pages
+                setTimeout(() => {
+                    document.querySelectorAll('.auth-state').forEach(page => {
+                        if (page.id !== 'state-login') {
+                            page.classList.remove('flipped');
+                        }
+                    });
+                }, 800);
+            } catch (error) {
+                triggerToast(error.message || 'Password reset failed. Please try again.');
+            } finally {
+                stopLoading();
+            }
         });
     }
 
