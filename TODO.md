@@ -1,6 +1,7 @@
-# TODO: Instructor Page Implementation
+# TODO: Equipment Module Enhancement
 
 ## Steps
-- [ ] Step 1: Update instructor.html form fields to match API payload
-- [ ] Step 2: Update instructors.js to send correct API payload
-- [ ] Step 3: Commit and push changes
+- [x] Step 1: Update equipment.html — Add new form fields (description, brand, model, serial, purchase_date, purchase_price) + update table columns (Brand / Model column)
+- [x] Step 2: Update equipment.js — Extend data model, mock data (including Commercial Treadmill EQP-109), table rendering, form handling (open/edit/save), CSV export, search across new fields
+- [x] Step 3: Test and verify (completed)
+
